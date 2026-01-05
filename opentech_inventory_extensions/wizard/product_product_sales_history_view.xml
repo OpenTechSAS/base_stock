@@ -1,0 +1,48 @@
+<odoo>
+    <record id="view_product_sales_summary_form" model="ir.ui.view">
+        <field name="name">product.sales.summary.form</field>
+        <field name="model">product.sales.summary</field>
+        <field name="arch" type="xml">
+            <form string="Resumen del Producto">
+                <sheet>
+                    <group col="2">
+                        <group>
+                            <field name="product_id" readonly="1"/>
+                            <field name="default_code" readonly="1"/>
+                            <field name="categ_id" readonly="1"/>
+                        </group>
+
+                        <group>
+                            <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Stock fisico">
+                            <group>
+                                <label for="qty_available" string="Cantidad a la mano"/>
+                                <div>
+                                    <field name="qty_available" nolabel="1"/>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Ventas">
+                            <field name="sales_last_months" nolabel="1" widget="json" readonly="1"/>
+                        </page>
+                        <page string="Compras">
+                            <group>
+                                <group>
+                                    <field name="lst_price"/>
+                                    <field name="tax_string"/>
+                                </group>
+                                <field name="purchase_last_months" nolabel="1" widget="json" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

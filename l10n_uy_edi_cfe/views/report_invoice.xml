@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="report_invoice_cfe_template">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="o">
+				<t t-set="lang" t-value="o.partner_id.lang"/>
+				<t t-call="web.report_layout">
+					<style type="text/css">
+						.page {
+						font-size: 12px !important;
+						font-family: 'Lato Bold', sans-serif !important;
+						letter-spacing: 1px;
+						}
+						.table {
+						width: 100%;
+						color: #212529;
+						table-layout: fixed;
+						margin-bottom: 8px !important;
+						border-collapse: collapse;
+						font-size: 12px !important;
+						}
+						.table th {
+						background-color: #f0f0f0;		font-weight: bold;
+						}
+						.table-bordered td,
+						.table-bordered th {
+						border: 1px solid #222;			padding: 0.5rem;
+						}
+						.table-bordered th {
+						border-bottom: 1px solid #f0f0f0 !important;
+						}
+						.table-striped {
+						width: 100%;	color: #212529;	border-collapse: collapse;
+						margin-bottom: 2rem !important; margin-top: 20px !important;
+						font-size: 13px !important;
+						}
+						.table-striped th,
+						.table-striped td,
+						.table-striped tr
+						{
+						padding: 0.75rem;	vertical-align: top;	border: none !important;
+						}
+						.table-striped tbody tr:nth-of-type(2n + 1) {
+						background-color: rgba(0, 0, 0, 0.05);
+						}
+						.bg-light {	background-color: #f0f0f0;	}
+						.me-2 {	margin-right: 0.5rem;			}
+						.p-2 { 	padding: 0.5rem;    			}
+						.mt-3 {	margin-top: 1rem;				}
+						.row {
+						display: flex;		flex-wrap: wrap;	margin-right: 15px;	margin-left: 15px;
+						}
+						.col-1 {	width: 8%;		float: left;	}
+						.col-2 {	width: 15%;		float: left;	}
+						.col-3 {	width: 25%;		float: left;	}
+						.col-4 {	width: 33%;		float: left;	}
+						.col-5 {	width: 42%;		float: left;	}
+						.col-6 {	width: 49%; 			        }
+						.col-8 {    width: 65%;	    float: right;   }
+						.col-12 {	width: 100%;					}
+						.text-center {			text-align: center;		}
+						.text-right  {			text-align: right;		}
+						.text-left   {			text-align: left;		}
+						div.page {
+						height: 100%;		margin: 0;			padding: 0;
+						}
+						.wrapper {
+						min-height: 100vh; 	display: flex;		flex-direction: column;
+						}
+						.cfe-content, .cfe-header {
+						flex: 1; /* Ocupa el espacio restante */
+						position: relative;	overflow: hidden;
+						}
+						.cfe-content {
+						min-height: 500px;
+						}
+						.cfe-footer {
+						position: relative;	bottom: 0;	left: 0;	width: 100%;
+						min-height: 100px;
+						}
+						.cfe-footer p {
+						font-size: 13px;	text-align: center;		margin-top: 10px;
+						}
+						.div-border {
+						height: 75px !important;  border: 1px solid #222;	padding: 0; text-align: center;
+						}
+						h4 {
+						margin: 0;		font-size: 14px;	font-weight: normal !important;
+						}
+					</style>
+					<div class="page">
+						<div class="wrapper">
+							<div class="cfe-header">
+								<!-- Section 1: HEADER -->
+								<div class="row" id="report-header">
+									<!-- Columna izquierda: Logo e info de empresa -->
+									<div class="col-4">
+										<div class="logo-box">
+											<img t-if="o.company_id.logo"
+												 class="o_company_logo_big"
+												 t-att-src="image_data_uri(o.company_id.logo)"
+												 alt="Logo"
+												 style="width: 100%; height: 75px; padding-right: 10px;" />
+											<div class="mt-3">
+												<h4><strong t-esc="o.company_id.name"/></h4>
+												<h4 t-esc="o.company_id.partner_id.name"/>
+												<h4 t-esc="o.company_id.partner_id.street"/>
+												<h4 t-esc="o.company_id.partner_id.city + ', ' + o.company_id.partner_id.country_id.name"/>
+											</div>
+										</div>
+									</div>
+									<!-- Columna Derecha: RUT, Tipo de comprobante, Número -->
+									<div class="col-8">
+										<table class="table table-bordered">
+											<tr class="text-center">
+												<th>RUT</th>
+												<th>Tipo de comprobante</th>
+												<th>Número</th>
+											</tr>
+											<tr class="text-center">
+												<td><span t-esc="o.company_id.vat" /></td>
+												<td>
+													<t t-set="uy_invoice_name" t-value="''"/>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '101'">
+														<t t-set="uy_invoice_name" t-value="'e-Ticket'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '102'">
+														<t t-set="uy_invoice_name" t-value="'Nota de Crédito de e-Ticket'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '103'">
+														<t t-set="uy_invoice_name" t-value="'Nota de Débito de e-Ticket'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '111'">
+														<t t-set="uy_invoice_name" t-value="'e-Factura'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '112'">
+														<t t-set="uy_invoice_name" t-value="'Nota de Crédito de e-Factura'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '113'">
+														<t t-set="uy_invoice_name" t-value="'Nota de Débito de e-Factura'"/>
+													</t>
+
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '121'">
+														<t t-set="uy_invoice_name" t-value="'eFactura de exportación'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '122'">
+														<t t-set="uy_invoice_name" t-value="'Nota de crédito de eFactura de exportación'"/>
+													</t>
+													<t t-if="o.uy_is_cfe and o.uy_document_code == '123'">
+														<t t-set="uy_invoice_name" t-value="'Nota de débito de eFactura de exportación'"/>
+													</t>
+													<t t-if="o.uy_is_cfe">
+															<span t-esc="uy_invoice_name" />
+													</t>
+												</td>
+												<td>
+													<t t-esc="o.uy_cfe_serie"/>-<t t-esc="o.uy_cfe_number"/>
+												</td>
+											</tr>
+										</table>
+
+										<!-- Tabla 2: Fecha emisión, Vencimiento, Moneda, Forma de pago -->
+										<table class="table table-bordered">
+											<tr class="text-center">
+												<th>Fecha emisión</th>
+												<th>Vencimiento</th>
+												<th>Moneda</th>
+												<th>Forma de pago</th>
+											</tr>
+											<tr class="text-center">
+												<td><span t-field="o.invoice_date">2023-10-31</span></td>
+												<td><span t-field="o.invoice_date_due">2023-10-31</span></td>
+												<td>
+													<span t-esc="o.currency_id.name">UYU</span>
+												</td>
+												<td>
+													<span t-esc="o.invoice_payment_term_id.name">Contado</span>
+												</td>
+											</tr>
+										</table>
+										<!-- Tabla 3: RUT comprador, Datos comprador -->
+										<div class="col-6" style="margin-right: 1%;float: left;" >
+											<div class="div-border">
+												<h4 class="text-center" style="padding: 8px;">
+													RUT COMPRADOR
+												</h4>
+												<span class="text-center" t-esc="o.partner_id.vat"/>
+											</div>
+										</div>
+										<div class="col-6" style="margin-left: 1%;float: right;">
+											<div class="div-border" style="padding:0; margin: 0; ">
+												<ul style="list-style-type: none;
+												margin-top: 0;
+												margin-left:-40px;
+												padding-top:0;
+												width:100%;">
+													<li class="text-center bg-light" style="padding: 8px; margin-bottom:5px;">
+														<strong>Datos comprador</strong>
+													</li>
+													<li class="text-center" >
+														<span style="font-weight:bold; text-transform:uppercase;"
+															  t-esc="o.partner_id.name"/>
+													</li>
+													<li class="text-center" >
+														<span t-esc="o.partner_id.street"/> ,
+														<span t-esc="o.partner_id.city"/>,
+														<span t-esc="o.partner_id.country_id.name"/>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- end of content -->
+							<div class="cfe-content" >
+								<div class="row" id="detail-product">
+									<!-- Section 4: Tabla Detalle de productos -->
+									<table class="table-striped" style="margin-top:20px !important;">
+										<tr class="table-secondary">
+											<th width="10%" class="text-left">Código</th>
+											<th width="50%" class="text-left">Concepto</th>
+											<th width="13%" class="text-right">Precio Ud.</th>
+											<th width="13%" class="text-right">Cantidad</th>
+											<th width="13%" class="text-right">Total</th>
+										</tr>
+										<t t-set="total_units" t-value="0.0"/>
+										<t t-set="total_tax_10" t-value="0.0"/>
+										<t t-set="total_tax_22" t-value="0.0"/>
+										<t t-set="total_tax_other" t-value="0.0"/>
+
+										<t t-foreach="o.invoice_line_ids" t-as="line">
+											<t t-set="total_units" t-value="total_units + line.quantity"/>
+											<!-- Clasificación por porcentaje de impuesto -->
+											<t t-set="has_tax_10" t-value="False"/>
+											<t t-set="has_tax_22" t-value="False"/>
+											<t t-foreach="line.tax_ids" t-as="tax">
+												<t t-if="tax.amount == 10.0">
+													<t t-set="has_tax_10" t-value="True"/>
+												</t>
+												<t t-if="tax.amount == 22.0">
+													<t t-set="has_tax_22" t-value="True"/>
+												</t>
+											</t>
+
+											<!-- Acumular según el impuesto -->
+											<t t-if="has_tax_10">
+												<t t-set="total_tax_10" t-value="total_tax_10 + line.price_subtotal"/>
+											</t>
+											<t t-elif="has_tax_22">
+												<t t-set="total_tax_22" t-value="total_tax_22 + line.price_subtotal"/>
+											</t>
+											<t t-else="">
+												<t t-set="total_tax_other" t-value="total_tax_other + line.price_subtotal"/>
+											</t>
+											<tr>
+												<td class="text-left"><span t-esc="line.product_id.default_code"/></td>
+												<td class="text-left"><span t-field="line.name"/></td>
+												<td class="text-right"><span t-field="line.price_unit"/></td>
+												<td class="text-right"><span t-field="line.quantity"/></td>
+												<td class="text-right">
+													<span t-field="line.price_total"  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+												</td>
+											</tr>
+										</t>
+									</table>
+								</div>
+							</div>
+
+							<!-- section 5: footer -->
+							<footer id="footer" class="cfe-footer" >
+								<!-- section 6: Detalle de ADENDAS -->
+								<div class="row">
+									<div class="col-12" style="margin-bottom:5em;">
+										<h4 class="text-center bg-light"
+											style="padding-bottom: 10px;
+											padding-top: 2px;
+											font-weight:bold;
+											font-size:14px;">ADENDA</h4>
+										<p>
+											<t t-esc="o.narration"/>
+										</p>
+									</div>
+								</div>
+
+								<!-- section 7: Footer -QR - INFO -->
+								<div class="row" >
+									<div class="col-1" id="qrcode">
+										<t t-set="qr_code_url" t-value="o._generate_uy_dgi_qr_code(silent_errors=True)" />
+										<t t-if="qr_code_url">
+											<img t-att-src="qr_code_url"
+												 alt="QR DGI"
+												 style="width: 120px; height: 120px;" />
+										</t>
+									</div>
+									<div class="col-3">
+										<ul style="list-style-type: none;
+										font-size:9px;
+										font-weight:bold;
+										letter-spacing: 0.1em; ">
+											<li>
+												Fecha emisor: <span t-esc="o.uy_cfe_id.uy_send_date.strftime('%Y-%m-%d')"/>
+											</li>
+											<li>Puede verificar comprobante en <br/>
+												efactura.dgi.gub.uy
+											</li>
+											<li>
+												IVA al día
+											</li>
+											<li>
+												CAE: <span t-esc="o.uy_constancy"/>
+											</li>
+											<li>
+												Serie: <span t-esc="o.uy_cfe_serie"/>
+											</li>
+											<li>
+												Rango: <span t-esc="o.uy_constancy_from"/> -  <span t-esc="o.uy_constancy_to"/>
+											</li>
+											<li>
+												C.S.: <span t-esc="o.uy_cfe_id.uy_cfe_hash and o.uy_cfe_id.uy_cfe_hash[:6] or ''"/>
+											</li>
+										</ul>
+									</div>
+									<div class="col-3">
+										<ul style="list-style-type: none;">
+											<li style="font-size: 14px;text-center;margin-bottom:3px">Vendedor</li>
+											<li style="font-size: 14px;text-center;margin-bottom:3px">
+												<span t-esc="o.invoice_user_id.name"/>
+											</li>
+											<li style="font-size: 14px;text-center;margin-bottom:3px">Unidades</li>
+											<li style="font-size: 14px;text-center;margin-bottom:3px">
+												<span t-esc="total_units"/>
+											</li>
+										</ul>
+									</div>
+									<div class="col-5">
+										<!-- section 8: Totales -->
+										<table style="width: 100%; border-collapse: collapse; border-top: solid 1px #f0f0f0;">
+											<tr>
+												<td style="padding: 4px;">SubTotal</td>
+												<td style="text-align: right; padding: 4px;">
+													<span t-field="o.amount_untaxed"
+														  />
+												</td>
+											</tr>
+											<t t-set="tax_totals" t-value="o.tax_totals"/>
+											<t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+
+												<t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+													<tr class="o_taxes">
+														<t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+															<td>
+																<span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
+															</td>
+															<td class="text-end o_price_total" style="text-align: right; padding: 6px;">
+																<span class="text-nowrap"
+																	  t-out="tax_group['tax_amount_currency']"
+																	  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+																>1.05</span>
+															</td>
+														</t>
+														<t t-else="">
+															<td>
+																<span t-out="tax_group['group_name']">Tax 15%</span>
+																<!--span> on </span-->
+																<!--span class="text-nowrap"
+																	  t-out="tax_group['display_base_amount_currency']"
+																	  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+																>27.00</span-->
+															</td>
+															<td style="text-align: right; padding: 6px;">
+																<span class="text-nowrap"
+																	  t-out="tax_group['tax_amount_currency']"
+																	  t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+																>4.05</span>
+															</td>
+														</t>
+													</tr>
+												</t>
+
+											</t>
+											<tr style="background-color: #eaeaea; font-weight: bold;">
+												<td style="padding: 6px;">Total a pagar</td>
+												<td style="text-align: right; padding: 6px;">
+													<span t-field="o.amount_total"   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+												</td>
+											</tr>
+										</table>
+
+									</div>
+								</div>
+							</footer>
+						</div>
+						<!-- end of wrapper -->
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_cfe_a4" model="report.paperformat">
+            <field name="name">A4 - CFE</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">8</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">2</field>
+            <field name="margin_right">2</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">10</field>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="report_invoice_cfe" model="ir.actions.report">
+            <field name="name">Factura CFE Uruguay</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_uy_edi_cfe.report_invoice_cfe_template</field>
+            <field name="report_file">l10n_uy_edi_cfe.report_invoice_cfe_template</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="paperformat_id" ref="paperformat_cfe_a4"/>
+        </record>
+
+    </data>
+</odoo>

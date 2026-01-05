@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_uy.partner_cfu" model="res.partner">
+            <field name="l10n_latam_identification_type_id" eval="False"/>
+            <field name="uy_doc_type" eval="False"/>
+            <field name="vat" eval="False"/>
+        </record>
+    </data>
+</odoo>

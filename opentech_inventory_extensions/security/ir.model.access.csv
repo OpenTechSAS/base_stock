@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+opentech_inventory_extensions.access_product_sales_summary,access_product_sales_summary,opentech_inventory_extensions.model_product_sales_summary,base.group_user,1,1,1,1
