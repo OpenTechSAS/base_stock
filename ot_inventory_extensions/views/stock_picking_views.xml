@@ -1,0 +1,25 @@
+<odoo>
+    <record id="stock_picking_view_invoice_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.view.invoice.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_detailed_operations']" position="after">
+                <button name="action_open_invoice"
+                        type="object"
+                        string="Factura"
+                        class="o_form_field o_stat_info"
+                        invisible='not sale_id or not sale_id.invoice_ids'
+                        icon="fa-file-text-o"/>
+            </xpath>
+            <xpath expr="//button[@name='do_print_picking']" position="after">
+                <button name="%(action_picking_invoice_wizard)d"
+                        string="Crear Factura"
+                        type="action"
+                        class="btn-primary"
+                        context="{'default_picking_id': id}"
+                        invisible="state != 'done' or not sale_id or picking_type_code == 'incoming'"/>
+            </xpath >
+        </field>
+    </record>
+</odoo>

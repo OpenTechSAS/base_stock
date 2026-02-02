@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ot_inventory_extensions.access_picking_invoice_wizard,access_picking_invoice_wizard,ot_inventory_extensions.model_picking_invoice_wizard,base.group_user,1,1,1,1
